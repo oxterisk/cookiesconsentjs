@@ -37,12 +37,12 @@ Call the library after your scripts and configure the parameters.
 
 ## Preview
 
-[Check themes](https://examples.oxterisk.com/cookiesconsentjs/example9.html)
+[Check themes](https://resources.oxterisk.com/cookiesconsentjs/examples/example9.html)
 
 ### Light theme
 
-![Example1](https://examples.oxterisk.com/cookiesconsentjs/img/page-theme-light.jpeg)
+![Example1](https://resources.oxterisk.com/cookiesconsentjs/examples/img/page-theme-light.jpeg)
 
 ### Dark theme
 
-![Example2](https://examples.oxterisk.com/cookiesconsentjs/img/page-theme-dark.jpeg)
+![Example2](https://resources.oxterisk.com/cookiesconsentjs/examples/img/page-theme-dark.jpeg)
