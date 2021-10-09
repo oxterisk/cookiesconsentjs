@@ -46,3 +46,7 @@ Call the library after your scripts and configure the parameters.
 ### Dark theme
 
 ![Example2](https://resources.oxterisk.com/cookiesconsentjs/examples/img/page-theme-dark.jpeg)
+
+### Sober theme
+
+![Example3](https://resources.oxterisk.com/cookiesconsentjs/examples/img/page-theme-sober.jpeg)
