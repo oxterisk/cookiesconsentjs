@@ -1,0 +1,79 @@
+:root {
+    --windowBg: #fff;
+    --windowBorder: 1px solid #ccc;
+    --windowWidth: 80%;
+    --windowRadius: 2px;
+    --windowPadding: 3rem;
+    --windowMarginTop: .5rem;
+    --windowMarginBottom: .5rem;
+    --windowMarginLeft: .5rem;
+    --windowMarginRight: .5rem;
+
+    --titleFontSize: 26px;
+    --titleFontWeight: bold;
+    --titleTextColor: #000;
+    --titlePadding: 0 0 2rem 0;
+    --messageFontSize: 14px;
+    --messageTextColor: #000;
+    --messageLineHeight: 1.2rem;
+    --messagePadding: 0 0 2rem 0;
+    --messageLinkColor: blue;
+    --messageLinkDecoration: underline;
+
+    --btnFontSize: 16px;
+    --btnFontWeight: 600;
+    --btnRadius: 2px;
+    --btnPadding: 18px 32px;
+    --btnMargin: 32px 4px 0 4px;
+
+    --btnAcceptBg: #1E88E5;
+    --btnAcceptBgHover: #0D47A1;
+    --btnAcceptTextColor: #ffffff;
+    --btnAcceptBorder: 1px solid #0D47A1;
+
+    --btnRejectBg: #E53935;
+    --btnRejectBgHover: #B71C1C;
+    --btnRejectTextColor: #ffffff;
+    --btnRejectBorder: 1px solid #B71C1C;
+
+    --btnInfoBg: #FAFAFA;
+    --btnInfoBgHover: #E0E0E0;
+    --btnInfoTextColor: #000;
+    --btnInfoBorder: 1px solid #E0E0E0;
+
+    --btnSettingsBg: var(--btnInfoBg);
+    --btnSettingsBgHover: var(--btnInfoBgHover);
+    --btnSettingsTextColor: var(--btnInfoTextColor);
+    --btnSettingsBorder: var(--btnInfoBorder);
+
+    --btnSettingsAcceptBg: var(--btnAcceptBg);
+    --btnSettingsAcceptBgHover: var(--btnAcceptBgHover);
+    --btnSettingsAcceptTextColor: var(--btnAcceptTextColor);
+    --btnSettingsAcceptBorder: var(--btnAcceptBorder);
+
+    --btnSettingsSelectBg: var(--btnInfoBg);
+    --btnSettingsSelectBgHover: var(--btnInfoBgHover);
+    --btnSettingsSelectTextColor: var(--btnInfoTextColor);
+    --btnSettingsSelectBorder: var(--btnInfoBorder);
+
+    --btnDismissFontSize: var(--btnFontSize);
+    --btnDismissFontWeight: var(--btnFontWeight);
+    --btnDismissRadius: var(--btnRadius);
+    --btnDismissBorder: 1px solid #A1887F;
+    --btnDismissPadding: var(--btnPadding);
+
+    --btnDismissBg: #ECEFF1;
+    --btnDismissBgHover: #CFD8DC;
+    --btnDismissTextColor: #000;
+
+    --popupBg: #fefefe;
+    --popupRadius: var(--windowRadius);
+
+    --settingsFontSize: 14px;
+    --settingsSeparatorColor: #333;
+    --settingsCheckBoxSize: 25px;
+    --popupTextColor: #333;
+    --btnCloseColor: #aaa;
+    --btnCloseColorHover: #000;
+
+}
