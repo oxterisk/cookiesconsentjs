@@ -4,7 +4,7 @@ Cookies Consent JS is an easy-to-use javascript library to show the cookies cons
 
 You can easily customize the design of the message by modifying the theme or creating a new one.
 
-[Project web, documentation & support](https://www.oxterisk.com/projects/cookiesconsentjs/index)
+[Project web, documentation & support](https://www.oxterisk.com/projects/cookies-consent-js/)
 
 ## Basic usage
 
@@ -29,11 +29,11 @@ Call the library after your scripts and configure the parameters.
 <script> const cc = CookiesConsentJS({ parameters }); </script>
 ```
 
-[Documentation](https://www.oxterisk.com/projects/cookiesconsentjs/index)
+[Documentation](https://www.oxterisk.com/projects/cookies-consent-js/)
 
 ## Examples and configurations
 
-[See examples](https://www.oxterisk.com/projects/cookiesconsentjs/examples)
+[See examples](https://www.oxterisk.com/projects/cookies-consent-js/cookies-consent-js-examples/)
 
 ## Preview
 
