@@ -258,6 +258,10 @@
     border-radius: var(--popupRadius, 8px);
 }
 
+.cc-modal-window h2 {
+    color: var(--popupTextColor, #333);
+}
+
 /* The Close Button */
 .cc-modal-close {
     color: var(--btnCloseColor, #aaa);
@@ -295,5 +299,9 @@
     #cc-window.cc-pos-bottom-left,
     #cc-window.cc-pos-bottom-right {
         bottom: 0;
+    }
+    .cc-modal-window {
+        margin: 10px auto;
+        width: 96%;
     }
 }
