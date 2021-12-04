@@ -137,7 +137,6 @@
 #cc-window-settings .cc-window-settings-cookie input[type="checkbox"] {
     width: var(--settingsCheckBoxSize, 30px);
     height: var(--settingsCheckBoxSize, 30px);
-
 }
 
 /* Buttons */
@@ -277,4 +276,17 @@
 
 .cc-modal-content {
     margin: 1rem 2rem;
+}
+
+@media screen and (max-width: 768px) {
+    #cc-window.cc-pos-top-left,
+    #cc-window.cc-pos-top-right,
+    #cc-window.cc-pos-bottom-left,
+    #cc-window.cc-pos-bottom-right {
+        width: 100%;
+        min-width: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+    }
 }
