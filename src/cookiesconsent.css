@@ -285,8 +285,15 @@
     #cc-window.cc-pos-bottom-right {
         width: 100%;
         min-width: 100%;
-        top: 0;
         left: 0;
         right: 0;
+    }
+    #cc-window.cc-pos-top-left,
+    #cc-window.cc-pos-top-right {
+        top: 0;
+    }
+    #cc-window.cc-pos-bottom-left,
+    #cc-window.cc-pos-bottom-right {
+        bottom: 0;
     }
 }
