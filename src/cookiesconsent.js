@@ -1,6 +1,7 @@
 /**
- * CookiesConsentJS 0.9
+ * CookiesConsentJS 1.0
  * oxterisk@protonmail.com
+ * oxterisk@proton.me
  */
 
 class CookiesConsent {
@@ -9,9 +10,28 @@ class CookiesConsent {
 
         this.params = params == '' ? {} : params;
         this.params.cookies_status = [];
+        this.availablePositions = ['top','top-left','top-right','top-center','bottom','bottom-left','bottom-right','bottom-center'];
         this.checkParameters();
 
         if ( this.isPageAllowedToShowConsent() ) {
+
+            if ( this.params.cookies.hasOwnProperty( "cc_ga" ) ) {
+
+                if ( this.params.cookies.cc_ga.hasOwnProperty( "code" ) && this.params.cookies.cc_ga.code != "" ) {
+
+                    try {
+                        addGoogleAnalyticsScript( this.params.cookies.cc_ga );
+                    } catch( err ) {
+                        console.log( "ERROR: cc-ga.js script not found" );
+                    }
+
+                } else {
+
+                    console.log( "ERROR: Google Analytics code not specified" );
+
+                }
+
+            }
 
             if ( !this.answeredConsent() ) {
 
@@ -101,9 +121,11 @@ class CookiesConsent {
 
         }
 
-        this.params.position = this.params.hasOwnProperty( "position" ) && this.params.position != "" ? this.params.position : "top";
+        this.params.mainWindowSettings = this.params.hasOwnProperty( "mainWindowSettings" ) && this.params.mainWindowSettings ? true : false;
+        this.params.position = this.params.hasOwnProperty( "position" ) && this.params.position != "" && this.availablePositions.includes( this.params.position ) ? this.params.position : "bottom-left";
         this.params.btnDismissPosition = this.params.hasOwnProperty( "btnDismissPosition" ) && this.params.btnDismissPosition != "" ? this.params.btnDismissPosition : "bottom-left";
         this.params.expirationDays = this.params.hasOwnProperty( "expirationDays" ) && this.params.expirationDays != "" ? this.params.expirationDays : 0;
+        this.params.animation = this.params.hasOwnProperty( "animation" ) && !this.params.animation ? false : true;
 
         this.params.path = this.params.hasOwnProperty( "path" ) && this.params.path != "" ? `path=${this.params.path}` : "path=/";
 
@@ -147,44 +169,56 @@ class CookiesConsent {
 
     printHtmlMessage() {
 
-        const cc_window = document.getElementById("cc-window");
+        if ( this.params.mainWindowSettings ) {
 
-        if ( !cc_window ) {
+            this.showhideSettings();
 
-            // Position
-            let positionCss = `cc-pos-${this.params.position}`;
-            let contentAlign = `cc-content-${this.params.content.align}`;
-            let positionInsert = "afterbegin";
+        } else {
 
-            if ( this.params.position == "bottom" || this.params.position == "bottom-right" || this.params.position == "bottom-left" )
-                positionInsert = "beforeend";
+            const cc_window = document.getElementById( "cc-window" );
 
-            // Buttons
-            let buttons = this.getHtmlButtons();
+            if ( !cc_window ) {
 
-            // Policy link
-            let policy = "";
+                // Position
+                let positionCss = `cc-pos-${this.params.position}`;
+                let contentAlign = `cc-content-${this.params.content.align}`;
+                let positionInsert = "afterbegin";
 
-            if ( this.params.content.policy != "" && this.params.content.policyLink != "" )
-                policy = `<a href="${this.params.content.policyLink}" target="_blank">${this.params.content.policy}</a>`;
+                if ( this.params.position == "bottom" || this.params.position == "bottom-right" || this.params.position == "bottom-left" || this.params.position == "bottom-center" )
+                    positionInsert = "beforeend";
 
-            let content = `
-            <div class="cc-window-content">
-                <div class="cc-window-title">${this.params.content.title}</div>
-                <div class="cc-window-message">${this.params.content.message} <span class="cc-window-policy">${policy}</span></div>
-                <div class="cc-window-buttons">${buttons}</div>
-            </div>`;
+                // Buttons
+                let buttons = this.getHtmlButtons();
 
-            // Create window
-            let htmlMessage = document.createElement( "div" );
-            htmlMessage.id = "cc-window";
-            htmlMessage.classList.add( positionCss );
-            htmlMessage.classList.add( contentAlign );
-            htmlMessage.innerHTML = content;
+                // Policy link
+                let policy = "";
 
-            document.body.insertAdjacentElement( positionInsert, htmlMessage );
+                if ( this.params.content.policy != "" && this.params.content.policyLink != "" )
+                    policy = `<a href="${this.params.content.policyLink}" target="_blank">${this.params.content.policy}</a>`;
 
-            this.attachEventsButtons();
+                let content = `
+                <div class="cc-window-content">
+                    <div class="cc-window-title">${this.params.content.title}</div>
+                    <div class="cc-window-message">${this.params.content.message} <span class="cc-window-policy">${policy}</span></div>
+                    <div class="cc-window-buttons">${buttons}</div>
+                </div>`;
+
+                // Create window
+                let htmlMessage = document.createElement( "div" );
+                htmlMessage.id = "cc-window";
+                htmlMessage.classList.add( "cc-window" );
+                htmlMessage.classList.add( positionCss );
+                htmlMessage.classList.add( contentAlign );
+
+                if ( this.params.animation ) { htmlMessage.classList.add( "cc-animation-in" ); }
+
+                htmlMessage.innerHTML = content;
+
+                document.body.insertAdjacentElement( positionInsert, htmlMessage );
+
+                this.attachEventsButtons();
+
+            }
 
         }
 
@@ -228,31 +262,61 @@ class CookiesConsent {
 
     removeHtmlMessage() {
 
-        const elem = document.getElementById( "cc-window" );
+        if ( !this.params.mainWindowSettings ) {
 
-        if ( elem )
-            elem.remove();
+            const elem = document.getElementById( "cc-window" );
+
+            if ( this.params.animation ) {
+
+                elem.id = "cc-window-out";
+                elem.classList.remove( "cc-animation-in" );
+                elem.classList.add( "cc-animation-out" );
+
+                const btnAccept = document.getElementById( "cc-btn-accept" );
+                if ( btnAccept ) { btnAccept.id = "cc-btn-accept-out"; }
+                const btnReject = document.getElementById( "cc-btn-reject" );
+                if ( btnReject ) { btnReject.id = "cc-btn-reject-out"; }
+                const btnInfo = document.getElementById( "cc-btn-info" );
+                if ( btnInfo ) { btnInfo.id = "cc-btn-info-out"; }
+                const btnSettings = document.getElementById( "cc-btn-settings" );
+                if ( btnSettings ) { btnSettings.id = "cc-btn-settings-out"; }
+
+                setTimeout( function() { if ( elem ) { elem.remove(); } }, 2000 );
+
+            } else {
+
+                if ( elem ) { elem.remove(); }
+
+            }
+
+        }
 
     }
 
     printDismissButton() {
 
-        if ( this.params.hasOwnProperty( "buttons" ) && this.params.buttons.indexOf( "dismiss" ) >= 0 ) {
+        const cc_btn_dismiss = document.getElementById( "cc-btn-dismiss" );
 
-            let positionCss = `cc-pos-${this.params.btnDismissPosition}`;
-            let positionInsert = "beforeend";
+        if ( !cc_btn_dismiss ) {
 
-            if ( this.params.position == "top-right" || this.params.position == "top-left" )
-                positionInsert = "afterbegin";
+            if ( this.params.hasOwnProperty( "buttons" ) && this.params.buttons.indexOf( "dismiss" ) >= 0 ) {
 
-            let dismissButton = document.createElement( "div" );
-            dismissButton.id = "cc-btn-dismiss";
-            dismissButton.classList.add( positionCss );
-            dismissButton.innerHTML = this.params.content.btnDismiss;
+                let positionCss = `cc-pos-${this.params.btnDismissPosition}`;
+                let positionInsert = "beforeend";
 
-            document.body.insertAdjacentElement( positionInsert, dismissButton );
+                if ( this.params.position == "top-right" || this.params.position == "top-left" )
+                    positionInsert = "afterbegin";
 
-            this.attachEventsButtons();
+                let dismissButton = document.createElement( "div" );
+                dismissButton.id = "cc-btn-dismiss";
+                dismissButton.classList.add( positionCss );
+                dismissButton.innerHTML = this.params.content.btnDismiss;
+
+                document.body.insertAdjacentElement( positionInsert, dismissButton );
+
+                this.attachEventsButtons();
+
+            }
 
         }
 
@@ -269,21 +333,85 @@ class CookiesConsent {
 
     showhideInfo() {
 
-        if ( this.params.content.info != "" )
-            this.openPopUp( "cc-window-info", this.params.content.info );
+        if ( this.params.content.info != "" ) {
+
+            const divInfo = document.createElement( "div" );
+            divInfo.innerHTML = this.params.content.info;
+
+            this.openPopUp( "cc-window-info", divInfo );
+
+        }
 
     }
 
     showhideSettings() {
 
-        let settings = "";
+        const divCookieSettings = document.createElement( "div" );
+        divCookieSettings.className = "cc-window-settings-cookies";
+
+        this.params["hideDescription"] = this.params.hasOwnProperty( "hideDescription" ) && !this.params["hideDescription"] ? false : true;
+
+        if ( this.params.content.hasOwnProperty( "settingsHeader" ) && this.params.content.settingsHeader != '' ) {
+
+            const divHeader = document.createElement( "div" );
+            divHeader.className = "cc-window-settings-header";
+            divHeader.innerHTML = this.params.content.settingsHeader;
+            divCookieSettings.appendChild( divHeader );
+
+        }
 
         for ( const cookie in this.params.cookies ) {
 
-            settings += `<div id="${cookie}" class="cc-window-settings-cookie"><div class="cc-window-settings-cookie-desc">`;
+            const elem_id = Math.floor(Math.random() * 10000);
 
-            if ( this.params.cookies[cookie].hasOwnProperty( "description" ) )
-                settings += this.params.cookies[cookie]["description"];
+            const divCookie = document.createElement( "div" );
+            divCookie.setAttribute( "id", cookie );
+            divCookie.className = "cc-window-settings-cookie";
+
+            const divCookieContent = document.createElement( "div" );
+            divCookieContent.className = "cc-window-settings-cookie-content";
+
+            if ( this.params.cookies[cookie].hasOwnProperty( "title" ) ) {
+
+                const divTitle = document.createElement( "div" );
+                divTitle.className = "cc-window-settings-cookie-title";
+                divTitle.innerHTML = `${this.params.cookies[cookie]["title"]}`;
+
+                if ( this.params.cookies[cookie].hasOwnProperty( "description" ) && this.params.cookies[cookie]["description"] != '' && this.params["hideDescription"] ) {
+
+                    const scope = this;
+
+                    divTitle.innerHTML += ` <div id="cc-window-icon-dropdown-id-${elem_id}">&#10095;</div>`;
+                    divTitle.classList.add( "cc-window-settings-cookie-title-dropdown" );
+
+                    divTitle.addEventListener( "click", function() {
+                        scope.showhideDescription( elem_id );
+                    } );
+
+                }
+
+                divCookieContent.appendChild( divTitle );
+
+            }
+
+            if ( this.params.cookies[cookie].hasOwnProperty( "description" ) && this.params.cookies[cookie]["description"] != '' ) {
+
+                const divDescription = document.createElement( "div" );
+                divDescription.id = `cc-window-desc-id-${elem_id}`;
+                divDescription.className = "cc-window-settings-cookie-desc";
+
+                if ( this.params.cookies[cookie].hasOwnProperty( "title" ) && this.params.cookies[cookie]["title"] != '' && this.params["hideDescription"] ) {
+
+                    divDescription.style.display = "none";
+
+                }
+
+                divDescription.innerHTML = this.params.cookies[cookie]["description"];
+                divCookieContent.appendChild( divDescription );
+
+            }
+
+            divCookie.appendChild( divCookieContent );
 
             let checked = "";
 
@@ -301,17 +429,18 @@ class CookiesConsent {
 
             }
 
-            let disabled = this.params.cookies[cookie].hasOwnProperty( "disabled" ) && this.params.cookies[cookie].disabled && checked != "" ? ' disabled="disabled"' : "";
+            const disabled = this.params.cookies[cookie].hasOwnProperty( "disabled" ) && this.params.cookies[cookie].disabled && checked != "" ? ' disabled="disabled"' : "";
 
+            const divStatus = document.createElement( "div" );
+            divStatus.className = "cc-window-settings-cookie-value";
+            divStatus.innerHTML = `<label class="switch"><input type="checkbox" class="cc-cookie-checkbox" id="cc-cookie-${this.params.cookies[cookie]["name"]}" data-name="${this.params.cookies[cookie]["name"]}" name="cc-cookie-${this.params.cookies[cookie]["name"]}"${checked}${disabled}><span class="slider round"></span></label>`;
 
-
-            settings += `</div><div class="cc-window-settings-cookie-value"><input type="checkbox" class="cc-cookie-checkbox" id="cc-cookie-${this.params.cookies[cookie]["name"]}" data-name="${this.params.cookies[cookie]["name"]}" name="cc-cookie-${this.params.cookies[cookie]["name"]}"${checked}${disabled}>`;
-
-            settings += "</div></div>";
+            divCookie.appendChild( divStatus );
+            divCookieSettings.appendChild( divCookie );
 
         }
 
-        if ( settings != "" ) {
+        if ( divCookieSettings.innerHTML != '' ) {
 
             const btnSettingsSelectAll = "Select all";
             const btnSettingsUnselectAll = "Unselect all";
@@ -321,35 +450,80 @@ class CookiesConsent {
             this.params.content.btnSettingsUnselectAll = this.params.content.hasOwnProperty( "btnSettingsUnselectAll" ) ? this.params.content.btnSettingsUnselectAll : btnSettingsUnselectAll;
             this.params.content.btnSettingsAccept = this.params.content.hasOwnProperty( "btnSettingsAccept" ) ? this.params.content.btnSettingsAccept : btnSettingsAccept;
 
-            settings += `<div class="cc-window-settings-buttons">
-                <button type="button" id="cc-btn-settings-select" class="cc-btn-settings-select" data-action="select">${this.params.content.btnSettingsSelectAll}</button>
-                <button type="button" id="cc-btn-settings-accept" class="cc-btn-settings-accept">${this.params.content.btnSettingsAccept}</button>
-            </div>`;
+            const divButtons = document.createElement( "div" );
+            divButtons.className = "cc-window-settings-buttons";
+            divButtons.innerHTML = `<button type="button" id="cc-btn-settings-select" class="cc-btn-settings-select" data-action="select">${this.params.content.btnSettingsSelectAll}</button>
+            <button type="button" id="cc-btn-settings-accept" class="cc-btn-settings-accept">${this.params.content.btnSettingsAccept}</button>`;
 
-            this.openPopUp( "cc-window-settings", settings );
+            divCookieSettings.appendChild( divButtons );
 
-            this.attachEventsSettingsButtons();
+        }
 
+        if ( this.params.content.hasOwnProperty( "settingsFooter" ) && this.params.content.settingsFooter != '' ) {
+
+            const divFooter = document.createElement( "div" );
+            divFooter.className = "cc-window-settings-footer";
+            divFooter.innerHTML = this.params.content.settingsFooter;
+            divCookieSettings.appendChild( divFooter );
+
+        }
+
+        this.openPopUp( "cc-window-settings", divCookieSettings );
+        this.attachEventsSettingsButtons();
+
+    }
+
+    showhideDescription( id ) {
+
+        const description = document.getElementById( `cc-window-desc-id-${id}` );
+        const icon = document.getElementById( `cc-window-icon-dropdown-id-${id}` );
+
+        if ( description.style.display == "block" ) {
+            icon.style.transform = "rotate(0deg)";
+            description.style.display = "none";
+        } else {
+            icon.style.transform = "rotate(90deg)";
+            description.style.display = "block";
         }
 
     }
 
     openPopUp( id, content ) {
 
-        const popup = `
-        <div class="cc-modal-window">
-            <div id="cc-modal-close" class="cc-modal-close">&times;</div>
-            <div class="cc-modal-content">${content}</div>
-        </div>`;
-
         let htmlPopUp = document.createElement( "div" );
         htmlPopUp.id = id;
         htmlPopUp.classList.add( "cc-modal" );
-        htmlPopUp.innerHTML = popup;
+
+        let modalWindow = document.createElement( "div" );
+        modalWindow.classList.add( "cc-modal-window" );
+
+        let modalContent = document.createElement( "div" );
+        modalContent.classList.add( "cc-modal-content" );
+        modalContent.appendChild( content );
+
+        if ( !this.params.mainWindowSettings ) {
+
+            let modalClose = document.createElement( "div" );
+            modalClose.id = "cc-modal-close"
+            modalClose.classList.add( "cc-modal-close" );
+            modalClose.innerHTML = "&times;";
+
+            modalWindow.appendChild( modalClose );
+
+        }
+
+
+        modalWindow.appendChild( modalContent );
+        htmlPopUp.appendChild( modalWindow );
+
         document.body.insertAdjacentElement( "beforeend", htmlPopUp );
 
         htmlPopUp.style.display = "block";
-        document.getElementById( "cc-modal-close" ).addEventListener( "click", function() { htmlPopUp.remove(); } );
+
+        const btnClose = document.getElementById( "cc-modal-close" );
+
+        if ( btnClose )
+            document.getElementById( "cc-modal-close" ).addEventListener( "click", function() { htmlPopUp.remove(); } );
 
     }
 
@@ -396,8 +570,8 @@ class CookiesConsent {
 
         if ( btnDismiss )
             btnDismiss.addEventListener( "click", function() {
-                scope.removeDismissButton();
                 scope.printHtmlMessage();
+                scope.removeDismissButton();
             } );
 
         if ( btnSettings )
@@ -527,20 +701,81 @@ class CookiesConsent {
 
     callbackFunction( type = "" ) {
 
-        if ( type == "first-load" && this.params.hasOwnProperty( "callback" ) && this.params.callback.hasOwnProperty( "first_load" ) && this.params.callback.first_load != "" )
-            eval( `${this.params.callback.first_load}(this.params.cookies_status)` );
-        else if ( type == "load" && this.params.hasOwnProperty( "callback" ) && this.params.callback.hasOwnProperty( "load" ) && this.params.callback.load != "" )
-            eval( `${this.params.callback.load}(this.params.cookies_status)` );
-        else if ( type == "accept" && this.params.hasOwnProperty( "callback" ) && this.params.callback.hasOwnProperty( "accept" ) && this.params.callback.accept != "" )
-            eval( `${this.params.callback.accept}(this.params.cookies_status)` );
-        else if ( type == "reject" && this.params.hasOwnProperty( "callback" ) && this.params.callback.hasOwnProperty( "reject" ) && this.params.callback.reject != "" )
-            eval( `${this.params.callback.reject}(this.params.cookies_status)` );
+        // BEGIN: Google Analytics callbacks
+
+        if ( this.params.cookies.hasOwnProperty( "cc_ga" ) ) {
+
+            if ( this.params.cookies.cc_ga.hasOwnProperty( "code" ) && this.params.cookies.cc_ga.code != "" ) {
+
+                if ( type == "load" ) {
+                    try {
+                        setCookieGA( this.params.cookies.cc_ga.code, this.params.cookies_status.cc_ga );
+                    } catch( err ) {
+                        console.log( `ERROR: cc-ga.js script not loaded` );
+                    }
+                } else if ( type == "accept" ) {
+                    try {
+                        setCookieGA( this.params.cookies.cc_ga.code, this.params.cookies_status.cc_ga );
+                    } catch( err ) {
+                        console.log( `ERROR: cc-ga.js script not loaded` );
+                    }
+                } else if ( type == "reject" ) {
+                    try {
+                        setCookieGA( this.params.cookies.cc_ga.code, this.params.cookies_status.cc_ga );
+                    } catch( err ) {
+                        console.log( `ERROR: cc-ga.js script not loaded` );
+                    }
+                }
+
+            } else {
+
+                console.log( `ERROR: Google Analytics code not specified code not specified` );
+
+            }
+
+        }
+
+        // END: Google Analytics callbacks
+
+        if ( type == "first-load" && this.params.hasOwnProperty( "callback" ) && this.params.callback.hasOwnProperty( "first_load" ) && this.params.callback.first_load != "" ) {
+            try {
+                eval( `${this.params.callback.first_load}(this.params.cookies_status)` );
+            } catch( err ) {
+                console.log( `ERROR: Function ${this.params.callback.first_load} not found` );
+            }
+        } else if ( type == "load" && this.params.hasOwnProperty( "callback" ) && this.params.callback.hasOwnProperty( "load" ) && this.params.callback.load != "" ) {
+            try {
+                eval( `${this.params.callback.load}(this.params.cookies_status)` );
+            } catch( err ) {
+                console.log( `ERROR: Function ${this.params.callback.first_load} not found` );
+            }
+        } else if ( type == "accept" && this.params.hasOwnProperty( "callback" ) && this.params.callback.hasOwnProperty( "accept" ) && this.params.callback.accept != "" ) {
+            try {
+                eval( `${this.params.callback.accept}(this.params.cookies_status)` );
+            } catch( err ) {
+                console.log( `ERROR: Function ${this.params.callback.first_load} not found` );
+            }
+        } else if ( type == "reject" && this.params.hasOwnProperty( "callback" ) && this.params.callback.hasOwnProperty( "reject" ) && this.params.callback.reject != "" ) {
+            try {
+                eval( `${this.params.callback.reject}(this.params.cookies_status)` );
+            } catch( err ) {
+                console.log( `ERROR: Function ${this.params.callback.first_load} not found` );
+            }
+        }
 
     }
 
     getStatus() { return this.params.answered; }
     getConfig() { return this.params; }
-    showMessage() { this.removeDismissButton(); this.printHtmlMessage(); }
+    showMessage() {
+        try {
+            this.printHtmlMessage();
+            this.removeDismissButton();
+        } catch( err ) {
+            console.log( `ERROR: Can not show message` );
+        }
+
+    }
 
     removeCookies() {
 

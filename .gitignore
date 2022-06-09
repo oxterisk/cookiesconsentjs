@@ -2,5 +2,6 @@
 .DS_Store
 node_modules/
 /examples
+/src/themes/old_themes
 /cookiesconsentjs
 cookiesconsentjs.zip
