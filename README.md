@@ -1,5 +1,7 @@
 Version: 1.0
 
+# Cookies Consent JS
+
 **Cookies Consent JS** is an easy-to-use javascript library to show the cookies consent message and manage the users consent according to the cookies law GDPR and ePrivacy Directive.
 
 You can easily customize the design by changing the theme or creating a new one and it is ready to use with Google Analytics.
