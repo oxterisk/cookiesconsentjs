@@ -1,12 +1,14 @@
-Version: 1.0
+Version: 1.1
 
 # Cookies Consent JS
 
 **Cookies Consent JS** is an easy-to-use javascript library to show the cookies consent message and manage the users consent according to the cookies law GDPR and ePrivacy Directive.
 
-You can easily customize the design by changing the theme or creating a new one and it is ready to use with Google Analytics.
+You can easily customize the design by changing the theme or creating a new one and it is ready to use with **Google Analytics** and **Google Tag Manager**.
 
 [Project web, documentation & support](https://www.oxterisk.com/projects/cookies-consent-js/)
+
+[Change log](https://www.oxterisk.com/projects/cookies-consent-js/cookies-consent-js-change-log/)
 
 # Basic usage
 
@@ -112,7 +114,7 @@ info | Text that will be shown in the information window. It is possible to spec
 
 Key | Description | Values
 --- | --- | --- |
-name | Name by which the browser will identify the cookie. A name without spaces or special characters is recommended. | The **cc_ga** name is reserved to associate the cookie to Google Analytics.
+name | Name by which the browser will identify the cookie. A name without spaces or special characters is recommended. | The **cc_ga** and **cc_gtm** names are reserved to associate the cookie to Google Analytics and Google Tag Manager services.
 title | Title or long name with which the cookie will be displayed in its description section.
 description | Text that will be shown in the settings window to describe the cookie. It is possible to specify HTML code.
 checked | Initial state of the cookie checkbox. | true, false<br>Default: false
@@ -147,12 +149,21 @@ cookies : {
 }
 ```
 
-When using a Google Analytics cookie it is necessary to call the **cc-ga.js** module before the main library. [See example](https://www.oxterisk.com/projects/cookies-consent-js/ccjs-examples/ccjs-google-analytics-cookie/)
+When using a Google Analytics service it is necessary to call the **cc-ga.js** module before the main library. [See example](https://www.oxterisk.com/projects/cookies-consent-js/ccjs-examples/ccjs-google-analytics-cookie/)
 
 ```HTML
 <script src="modules/cc-ga.js"></script>
 <script src="cookiesconsent.min.js"></script>
 ```
+
+When using Google Tag Manager service it is necessary to call the **cc-gtm.js** module before the main library. [See example](https://www.oxterisk.com/projects/cookies-consent-js/ccjs-examples/ccjs-google-tag-manager-cookie/)
+
+```HTML
+<script src="modules/cc-gtm.js"></script>
+<script src="cookiesconsent.min.js"></script>
+```
+
+Google third party services are activated and deactivated by removing their scripts from the website according to the visitor's choice but the data collecting settings of these services will depend on the administrator of the website from the google panels.
 
 # Callback functions
 

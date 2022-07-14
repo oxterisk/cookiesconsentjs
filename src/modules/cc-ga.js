@@ -1,34 +1,107 @@
-function addGoogleAnalyticsScript({ code = "", onLoad = false }) {
+/**
+ * CookiesConsentJS 1.1
+ * oxterisk@protonmail.com
+ * oxterisk@proton.me
+ */
+
+function manageGoogleAnalytics({ lifecycle = '', cookie = '', status = false, path = '' }) {
+
+    const code = cookie.hasOwnProperty( 'code' ) ? cookie.code : '';
+    const onLoad = cookie.hasOwnProperty( 'onLoad' ) && cookie.onLoad === true ? true : false;
 
     if ( code != '' ) {
 
-        let script = document.createElement( "script" );
-        script.src = `https://www.googletagmanager.com/gtag/js?id=${code}`;
-        script.async = true;
+        switch ( lifecycle ) {
 
-        document.head.appendChild( script );
+            case 'first-load' :
+                if ( onLoad ) {
+                    addGoogleAnalyticsScript( code );
+                    setGoogleAnalyticsCookieStatus( code, true );
+                } else {
+                    setGoogleAnalyticsCookieStatus( code, false );
+                    cleanGoogleAnalyticsCookies( path );
+                }
+                break;
 
-        script = document.createElement( "script" );
-        script.innerHTML = `
+            case 'load' :
+            case 'accept' :
+                if ( status ) {
+                    addGoogleAnalyticsScript( code );
+                    setGoogleAnalyticsCookieStatus( code, true );
+                } else {
+                    setGoogleAnalyticsCookieStatus( code, false );
+                    delGoogleAnalyticsScript( code );
+                    cleanGoogleAnalyticsCookies( path );
+                }
+                break;
+
+            case 'reject' :
+                setGoogleAnalyticsCookieStatus( code, false );
+                delGoogleAnalyticsScript();
+                cleanGoogleAnalyticsCookies( path );
+                break;
+
+        }
+
+    } else {
+
+        console.log( `ERROR: Google Analytics code not specified` );
+
+    }
+
+}
+
+function addGoogleAnalyticsScript( code = '' ) {
+
+    if ( code != '' ) {
+
+        const scriptToCheck1 = document.getElementById( 'cc-ga-script-1' );
+        const scriptToCheck2 = document.getElementById( 'cc-ga-script-2' );
+
+        if ( !scriptToCheck1 ) {
+
+            let script = document.createElement( 'script' );
+            script.id = 'cc-ga-script-1';
+            script.src = `https://www.googletagmanager.com/gtag/js?id=${code}`;
+            script.async = true;
+            document.head.appendChild( script );
+
+        }
+
+        if ( !scriptToCheck2 ) {
+
+            script = document.createElement( 'script' );
+            script.id = 'cc-ga-script-2';
+            script.innerHTML = `
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
             gtag('config', '${code}', { 'anonymize_ip': true });
             gtag('config', '${code}');
             window['ga-disable-' + '${code}'] = true;`;
+            document.head.appendChild( script );
 
-        document.head.appendChild( script );
-
-        if ( onLoad )
-            setCookieGA( code, true );
+        }
 
     }
 
 }
 
-function setCookieGA( code = "", status = false ) {
+function delGoogleAnalyticsScript() {
 
-    if ( code != '' ) {
+    const scriptToCheck1 = document.getElementById( 'cc-ga-script-1' );
+    const scriptToCheck2 = document.getElementById( 'cc-ga-script-2' );
+
+    if ( scriptToCheck1 ) { scriptToCheck1.remove(); }
+    if ( scriptToCheck2 ) { scriptToCheck2.remove(); }
+
+}
+
+function setGoogleAnalyticsCookieStatus( code = '', status = false ) {
+
+    const scriptToCheck = document.getElementById( 'cc-ga-script-2' );
+
+    if ( code != '' && scriptToCheck ) {
 
         gtag( 'set', 'allow_google_signals', status );
         gtag( 'set', 'allow_ad_personalization_signals', status );
@@ -37,3 +110,24 @@ function setCookieGA( code = "", status = false ) {
     }
 
 }
+
+function cleanGoogleAnalyticsCookies( path ) {
+
+    const keysToRemove = (['_ga', '_gid', '__utm']);
+
+    let cookies = document.cookie;
+    let ca = cookies.split( ";" );
+
+    for( let i = 0; i < ca.length; i++ ) {
+
+        let key = ca[i].split( "=" );
+
+        for( let j = 0; j < keysToRemove.length; j++ )
+            if ( key.toString().trim().startsWith( keysToRemove[j] ) )
+                document.cookie = `${key[0]}="";expires=Thu, 01 Jan 1970 00:00:00 UTC;${path}`;
+
+    }
+
+}
+
+

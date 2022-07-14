@@ -1,5 +1,5 @@
 /**
- * CookiesConsentJS 1.0
+ * CookiesConsentJS 1.1
  * oxterisk@protonmail.com
  * oxterisk@proton.me
  */
@@ -472,7 +472,7 @@
 /* Animations */
 
 @keyframes cc-window-animation-in-top {
-    from { top: -120vh; visibility: visible; }
+    from { top: -80vh; visibility: visible; }
     to { top: var(--windowMarginTop, 24px); visibility: visible; }
 }
 
@@ -482,7 +482,7 @@
 }
 
 @keyframes cc-window-animation-in-bottom {
-    from { bottom: -120vh; visibility: visible; }
+    from { bottom: -80vh; visibility: visible; }
     to { bottom: var(--windowMarginBottom, 24px); visibility: visible; }
 }
 

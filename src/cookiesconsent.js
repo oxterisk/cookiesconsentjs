@@ -1,5 +1,5 @@
 /**
- * CookiesConsentJS 1.0
+ * CookiesConsentJS 1.1
  * oxterisk@protonmail.com
  * oxterisk@proton.me
  */
@@ -14,24 +14,6 @@ class CookiesConsent {
         this.checkParameters();
 
         if ( this.isPageAllowedToShowConsent() ) {
-
-            if ( this.params.cookies.hasOwnProperty( "cc_ga" ) ) {
-
-                if ( this.params.cookies.cc_ga.hasOwnProperty( "code" ) && this.params.cookies.cc_ga.code != "" ) {
-
-                    try {
-                        addGoogleAnalyticsScript( this.params.cookies.cc_ga );
-                    } catch( err ) {
-                        console.log( "ERROR: cc-ga.js script not found" );
-                    }
-
-                } else {
-
-                    console.log( "ERROR: Google Analytics code not specified" );
-
-                }
-
-            }
 
             if ( !this.answeredConsent() ) {
 
@@ -705,37 +687,33 @@ class CookiesConsent {
 
         if ( this.params.cookies.hasOwnProperty( "cc_ga" ) ) {
 
-            if ( this.params.cookies.cc_ga.hasOwnProperty( "code" ) && this.params.cookies.cc_ga.code != "" ) {
+                const status = this.params.hasOwnProperty( "cookies_status" ) && this.params.cookies_status.hasOwnProperty( "cc_ga" ) && this.params.cookies_status.cc_ga === true ? true : false;
 
-                if ( type == "load" ) {
-                    try {
-                        setCookieGA( this.params.cookies.cc_ga.code, this.params.cookies_status.cc_ga );
-                    } catch( err ) {
-                        console.log( `ERROR: cc-ga.js script not loaded` );
-                    }
-                } else if ( type == "accept" ) {
-                    try {
-                        setCookieGA( this.params.cookies.cc_ga.code, this.params.cookies_status.cc_ga );
-                    } catch( err ) {
-                        console.log( `ERROR: cc-ga.js script not loaded` );
-                    }
-                } else if ( type == "reject" ) {
-                    try {
-                        setCookieGA( this.params.cookies.cc_ga.code, this.params.cookies_status.cc_ga );
-                    } catch( err ) {
-                        console.log( `ERROR: cc-ga.js script not loaded` );
-                    }
+                try {
+                    manageGoogleAnalytics({ lifecycle: type, cookie: this.params.cookies.cc_ga, status, path: this.params.path });
+                } catch( err ) {
+                    console.log( `ERROR: cc-ga.js script not loaded` );
                 }
-
-            } else {
-
-                console.log( `ERROR: Google Analytics code not specified code not specified` );
-
-            }
 
         }
 
         // END: Google Analytics callbacks
+
+        // BEGIN: Google Tag Manager callbacks
+
+        if ( this.params.cookies.hasOwnProperty( "cc_gtm" ) ) {
+
+                const status = this.params.hasOwnProperty( "cookies_status" ) && this.params.cookies_status.hasOwnProperty( "cc_gtm" ) && this.params.cookies_status.cc_gtm === true ? true : false;
+
+                try {
+                    manageGoogleTagManager({ lifecycle: type, cookie: this.params.cookies.cc_gtm, status });
+                } catch( err ) {
+                    console.log( `ERROR: cc-gtm.js script not loaded` );
+                }
+
+        }
+
+        // END: Google Tag Manager callbacks
 
         if ( type == "first-load" && this.params.hasOwnProperty( "callback" ) && this.params.callback.hasOwnProperty( "first_load" ) && this.params.callback.first_load != "" ) {
             try {
