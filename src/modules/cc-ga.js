@@ -78,6 +78,9 @@ function addGoogleAnalyticsScript( code = '' ) {
             gtag('js', new Date());
             gtag('config', '${code}', { 'anonymize_ip': true });
             gtag('config', '${code}');
+            gtag('consent', 'default', {
+                'analytics_storage': 'denied'
+            });
             window['ga-disable-' + '${code}'] = true;`;
             document.head.appendChild( script );
 
@@ -105,6 +108,9 @@ function setGoogleAnalyticsCookieStatus( code = '', status = false ) {
 
         gtag( 'set', 'allow_google_signals', status );
         gtag( 'set', 'allow_ad_personalization_signals', status );
+        gtag( 'consent', 'update', {
+            'analytics_storage': status ? 'granted' : 'denied'
+        });
         window['ga-disable-' + code] = !status;
 
     }
@@ -117,17 +123,25 @@ function cleanGoogleAnalyticsCookies( path ) {
 
     let cookies = document.cookie;
     let ca = cookies.split( ";" );
+    let hostname_parts = window.location.hostname.split(".");
 
     for( let i = 0; i < ca.length; i++ ) {
 
         let key = ca[i].split( "=" );
 
-        for( let j = 0; j < keysToRemove.length; j++ )
-            if ( key.toString().trim().startsWith( keysToRemove[j] ) )
+        for( let j = 0; j < keysToRemove.length; j++ ) {
+
+            if ( key.toString().trim().startsWith( keysToRemove[j] ) ) {
+
                 document.cookie = `${key[0]}="";domain=${window.location.hostname};expires=Thu, 01 Jan 1970 00:00:00 UTC;${path}`;
 
+                if ( hostname_parts[0] == 'www' ) {
+                    let domain = `.${hostname_parts[1]}.${hostname_parts[2]}`;
+                    document.cookie = `${key[0]}="";domain=${domain};expires=Thu, 01 Jan 1970 00:00:00 UTC;${path}`;
+                }
+
+            }
+        }
     }
 
 }
-
-
