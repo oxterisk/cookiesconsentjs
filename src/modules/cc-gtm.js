@@ -98,14 +98,23 @@ function cleanGoogleTagManagerCookies( path ) {
 
     let cookies = document.cookie;
     let ca = cookies.split( ";" );
+    let hostname_parts = window.location.hostname.split(".");
 
     for( let i = 0; i < ca.length; i++ ) {
 
         let key = ca[i].split( "=" );
 
-        for( let j = 0; j < keysToRemove.length; j++ )
+        for( let j = 0; j < keysToRemove.length; j++ ) {
+
             if ( key.toString().trim().startsWith( keysToRemove[j] ) )
-                document.cookie = `${key[0]}="";domain=${window.location.hostname};expires=Thu, 01 Jan 1970 00:00:00 UTC;${path}`;
+            document.cookie = `${key[0]}="";domain=${window.location.hostname};expires=Thu, 01 Jan 1970 00:00:00 UTC;${path}`;
+
+            if ( hostname_parts[0] == 'www' ) {
+                let domain = `.${hostname_parts[1]}.${hostname_parts[2]}`;
+                document.cookie = `${key[0]}="";domain=${domain};expires=Thu, 01 Jan 1970 00:00:00 UTC;${path}`;
+            }
+
+        }
 
     }
 
