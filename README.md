@@ -1,3 +1,6 @@
+> [!WARNING]  
+> This project is being continued by [https://github.com/MetamorfosiLab/cookies-consent](https://github.com/MetamorfosiLab/cookies-consent).
+
 Version: 1.1
 
 # Cookies Consent JS
