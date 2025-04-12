@@ -773,6 +773,8 @@ class CookiesConsent {
 
 function CookiesConsentJS( params = '' ) {
 
-    return new CookiesConsent( params );
+    document.addEventListener( "DOMContentLoaded", ( event ) => {
+        return new CookiesConsent( params );
+    });
 
 }

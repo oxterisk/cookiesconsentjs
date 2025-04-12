@@ -1,17 +1,13 @@
 > [!WARNING]  
 > This project is being continued by [https://github.com/MetamorfosiLab/cookies-consent](https://github.com/MetamorfosiLab/cookies-consent).
 
-Version: 1.1
+Version: 1.1.1
 
 # Cookies Consent JS
 
 **Cookies Consent JS** is an easy-to-use javascript library to show the cookies consent message and manage the users consent according to the cookies law GDPR and ePrivacy Directive.
 
 You can easily customize the design by changing the theme or creating a new one and it is ready to use with **Google Analytics** and **Google Tag Manager**.
-
-[Project web, documentation & support](https://www.oxterisk.com/projects/cookies-consent-js/)
-
-[Change log](https://www.oxterisk.com/projects/cookies-consent-js/cookies-consent-js-change-log/)
 
 # Basic usage
 
@@ -32,8 +28,6 @@ Call the function after your scripts and set the parameters.
 ```HTML
 <script> const cc = CookiesConsentJS({ parameters }); </script>
 ```
-
-[Documentation](https://www.oxterisk.com/projects/cookies-consent-js/) / [Examples](https://www.oxterisk.com/projects/cookies-consent-js/ccjs-examples/)
 
 ## Example
 
@@ -59,6 +53,8 @@ const cc = CookiesConsentJS({
 }
 ```
 
+[Examples](https://oxterisk.github.io/cookiesconsentjs/example/)
+
 ## Themes
 
 You can use one of the predefined themes or create your own by calling its stylesheet before calling the main stylesheet library.
@@ -67,8 +63,6 @@ You can use one of the predefined themes or create your own by calling its style
 <link href="themes/cookiesconsent.theme-smooth.css" rel="stylesheet">
 <link href="cookiesconsent.min.css" rel="stylesheet">
 ```
-
-[Take a look at the themes](https://www.oxterisk.com/projects/cookies-consent-js/ccjs-examples/ccjs-themes/)
 
 # Parameters
 
@@ -125,8 +119,6 @@ disabled | Allows to interact or not with the checkbox. | true, false<br>Default
 onLoad | Only applicable to a cookie associated to Google Analytics. Determines whether data collection is activated before the user has accepted or rejected cookies. | true, false<br>Default: false
 code | Only applicable to a cookie associated to Google Analytics. Google Analytics code for global site tag (gtag.js).
 
-[See example](https://www.oxterisk.com/projects/cookies-consent-js/ccjs-examples/ccjs-configuring-settings-window/)
-
 **Example**
 
 ```HTML
@@ -152,14 +144,14 @@ cookies : {
 }
 ```
 
-When using a Google Analytics service it is necessary to call the **cc-ga.js** module before the main library. [See example](https://www.oxterisk.com/projects/cookies-consent-js/ccjs-examples/ccjs-google-analytics-cookie/)
+When using a Google Analytics service it is necessary to call the **cc-ga.js** module before the main library.
 
 ```HTML
 <script src="modules/cc-ga.js"></script>
 <script src="cookiesconsent.min.js"></script>
 ```
 
-When using Google Tag Manager service it is necessary to call the **cc-gtm.js** module before the main library. [See example](https://www.oxterisk.com/projects/cookies-consent-js/ccjs-examples/ccjs-google-tag-manager-cookie/)
+When using Google Tag Manager service it is necessary to call the **cc-gtm.js** module before the main library.
 
 ```HTML
 <script src="modules/cc-gtm.js"></script>
@@ -177,8 +169,6 @@ accept | This function will be invoked when the user clicks on the accept all or
 reject | This function will be invoked when the user clicks on the reject button.
 load | This function will be invoked every time a user that interacted previously with the cookies message (accepting or rejecting) visits the page.
 
-[See example](https://www.oxterisk.com/projects/cookies-consent-js/ccjs-examples/ccjs-callback-functions/)
-
 # Methods
 
 Key | Description
@@ -190,9 +180,10 @@ removeCookies() | Remove all the cookies created for this page.
 
 # Previews
 
-[Take a look at the themes](https://www.oxterisk.com/projects/cookies-consent-js/ccjs-examples/ccjs-themes/)
+[Take a look at the themes](https://oxterisk.github.io/cookiesconsentjs/examples/themes.md)
 
-![Default and dark themes](https://www.oxterisk.com/wp-content/uploads/2022/06/preview-message-different-themes.jpg)
+![Theme default](examples/img/cc-theme-default.jpg)
+![Theme dark](examples/img/cc-theme-dark.jpg)
 
 **Settings window**
 ![Settings window](https://www.oxterisk.com/wp-content/uploads/2022/06/cc-settings-margin.jpg)
