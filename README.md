@@ -1,4 +1,4 @@
-> [!WARNING]  
+> [!WARNING]
 > This project is being continued by [https://github.com/MetamorfosiLab/cookies-consent](https://github.com/MetamorfosiLab/cookies-consent).
 
 Version: 1.1.1
@@ -53,7 +53,7 @@ const cc = CookiesConsentJS({
 }
 ```
 
-[Examples](https://oxterisk.github.io/cookiesconsentjs/example/)
+[Examples](https://oxterisk.github.io/cookiesconsentjs/examples/)
 
 ## Themes
 
