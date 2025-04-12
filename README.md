@@ -53,7 +53,7 @@ const cc = CookiesConsentJS({
 }
 ```
 
-[Examples](https://oxterisk.github.io/cookiesconsentjs/examples/)
+[Examples](examples/index.md)
 
 ## Themes
 
