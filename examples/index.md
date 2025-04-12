@@ -2,26 +2,26 @@
 
 ## Examples
 
-[Basic usage](examples/basic-usage.md)
+[Basic usage](basic-usage.md)
 
-[Positioning the window](examples/positioning-window.md)
+[Positioning the window](positioning-window.md)
 
-[Configuring the information window](examples/config-info-window.md)
+[Configuring the information window](config-info-window.md)
 
-[Configuring the settings window](examples/config-settings-window.md)
+[Configuring the settings window](config-settings-window.md)
 
-[Callback functions](examples/callback-functions.md)
+[Callback functions](callback-functions.md)
 
-[Associating cookie with Google Analytics](examples/ga.md)
+[Associating cookie with Google Analytics](ga.md)
 
-[Associating cookie with Google Tag Manager](examples/gtm.md)
+[Associating cookie with Google Tag Manager](gtm.md)
 
-[Setting the settings window as the main window](examples/settings-main-window.md)
+[Setting the settings window as the main window](settings-main-window.md)
 
-[Remove dismiss button and use a link to show the message](examples/remove-dismiss-button.md)
+[Remove dismiss button and use a link to show the message](remove-dismiss-button.md)
 
-[Excluding pages from displaying the message](examples/excluding-pages.md)
+[Excluding pages from displaying the message](excluding-pages.md)
 
-[Themes](examples/themes.md)
+[Themes](themes.md)
 
-[Styling](examples/styling.md)
+[Styling](styling.md)
