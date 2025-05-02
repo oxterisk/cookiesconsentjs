@@ -180,10 +180,11 @@ removeCookies() | Remove all the cookies created for this page.
 
 # Previews
 
-[Take a look at the themes](https://oxterisk.github.io/cookiesconsentjs/examples/themes.md)
+[Take a look at the themes](examples/themes.md)
 
 ![Theme default](examples/img/cc-theme-default.jpg)
 ![Theme dark](examples/img/cc-theme-dark.jpg)
 
 **Settings window**
-![Settings window](https://www.oxterisk.com/wp-content/uploads/2022/06/cc-settings-margin.jpg)
+
+![Settings window](examples/img/cc-window-settings-main.jpg)
